@@ -36,7 +36,7 @@ function getProduct() {
          // Gestion d'erreur IMPORTANT
       .catch((error) => {
         // Si erreur dans URL, retourne l'erreur pour pas bloquer la création de la page
-            alert("Le serveur ne répond pas")
+            alert("Nous n'avons pas réussi à afficher nos canapés. Avez vous bien lancé le serveur local (Port 3000) ? Si le problème persiste prenons contact");
             return error;
     })    
   );
