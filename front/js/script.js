@@ -1,52 +1,95 @@
 
-let product = [];
+let products = [];
 
 // Fonction d'initialisation qui se lancera à chaque ouverture de la page (voir ligne 38)
 // Asynchrone, pour aller chercher dans l'API + mot clef await
 async function init() {
+  
 // Attend le retour de user avant de buildHTML
-  product = await getProduct();
-  console.log(product);
-  buildHTML(product);
+  products = await getProducts();
+  console.log(products);
+
+  if (products.length > 0) {
+    console.log(products);
+    buildHTML(products);
+  }
+
+  else if (products.length <= 0) {   
+      // document.createElement("div").innerHTML = "Désolé il n'y a plus de produits";
+  }
+
 }
 
-function getProduct() {
+function getProducts() {
   return (
     fetch("http://localhost:3000/api/products")
       .then((res) => res.json())
 
       .then((products) => {
-//creation d'une boucle pour afficher les produits
-        for (let product of products) {
-//changer pour une autre methode
-//Injection des données des produits dans la page HTML
-    items.innerHTML += `<a href="./product.html?id=${product._id}">
-    <article>
-      <img src="${product.imageUrl}" alt="${product.altTxt}">
-      <h3 class="productName">${product.name}</h3>
-      <p class="productDescription">${product.description}</p>
-    </article>
-    </a>`;
-    }
-    
+        return products;    
     })
-      .then((objetProduits) => {
-        console.table(objetProduits);
-      })
-         // Gestion d'erreur IMPORTANT
+      // Gestion d'erreur IMPORTANT
       .catch((error) => {
         // Si erreur dans URL, retourne l'erreur pour pas bloquer la création de la page
-            alert("Le serveur ne répond pas")
+            alert("Nous n'avons pas réussi à afficher nos canapés. Avez vous bien lancé le serveur local (Port 3000) ? Si le problème persiste prenons contact");
             return error;
     })    
   );
 }
 
-function buildHTML(product) {
-    // On récupère l'élément items pour y injecter les produits
-    const items = document.getElementById("items");
+function buildHTML() {
+
+  const items = document.getElementById("items");
+    
+  for (let product of products) {
+    
+      let link = document.createElement("a");
+      link.href = "/product.html?id=" + product._id;
+
+      items.appendChild(link)
+
+      let article = document.createElement("article");
+      link.appendChild(article);
+
+      let image = document.createElement("img");
+      image.src = product.imageUrl;
+      image.alt = product.altTxt;
+
+      article.appendChild(image);
+
+      let name = document.createElement ("h3");
+      name.textContent = product.name;
+      article.appendChild(name);
+
+      let description = document.createElement ("p");
+      description.textContent= product.description;
+      article.appendChild(description);
+
+
     }
     
-
+  }
 //Lancement du site, on fait tout
 init();
+
+
+/* items.innerHTML += `<a href="./product.html?id=${product._id}">
+        <article>
+          <img src="${product.imageUrl}" alt="${product.altTxt}">
+          <h3 class="productName">${product.name}</h3>
+          <p class="productDescription">${product.description}</p>
+        </article>
+        </a>`;
+        } */
+
+/*fonction de type Callback
+document.getElementById("items").addEventListener ('click', function(e){
+e.preventDefault();
+
+alert('Recommence !');
+return false;
+}); */
+
+//let searchParams = new URLSearchParams ("./product.html?id=${product._id")
+//console.log (searchParams.has("id"))
+
