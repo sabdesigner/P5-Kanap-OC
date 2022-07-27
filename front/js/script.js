@@ -11,13 +11,13 @@ async function init() {
 
   if (products.length > 0) {
     console.log(products);
+    // deepcode ignore WrongNumberOfArguments: <please specify a reason of ignoring this>
     buildHTML(products);
   }
 
   else if (products.length <= 0) {   
       // document.createElement("div").innerHTML = "Désolé il n'y a plus de produits";
   }
-
 }
 
 function getProducts() {
@@ -44,7 +44,7 @@ function buildHTML() {
   for (let product of products) {
     
       let link = document.createElement("a");
-      link.href = "/product.html?id=" + product._id;
+      link.href = `./product.html?id=${product._id}`
 
       items.appendChild(link)
 
