@@ -63,6 +63,7 @@ productPrice.innerHTML = `${product.price}€`;
 
 // Colors
 let select = document.getElementById("colors");
+
 // Pour chaque couleur, crée une option et met la dans le select
 product.colors.forEach((color) => {
   let option = document.createElement("option");
@@ -71,6 +72,35 @@ product.colors.forEach((color) => {
   select.appendChild(option);
 });
 
+/*Fonction de type Callback*/
+document.getElementById("addToCart").addEventListener ('click', function(e){
+  e.preventDefault();
+  console.log("Click");
+  
+  document.querySelector("#addToCart");
+  //conditions de validation du bouton ajouter au panier
+  if (
+    // les valeurs sont créées dynamiquement au click, et à l'arrivée sur la page, tant qu'il n'y a pas d'action sur la couleur et/ou la quantité, c'est 2 valeurs sont undefined.
+    product.quantity < 1 ||
+    product.quantity > 100 ||
+    product.quantity === undefined ||
+    product.colors === "" ||
+    product.colors === undefined
+  ) {
+    // joue l'alerte
+    alert("Pour valider le choix de cet article, veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
+    // si ça passe le controle
+  } else {
+    // joue panier
+    Panier();
+    console.log("clic effectué");
+  }
+
+  alert('Recommence !');
+  return false;
+});
 }
+
+
 //Lancement du site, on fait tout
 init();
