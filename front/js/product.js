@@ -1,3 +1,5 @@
+//import { panier } from "./basket.js";
+
 // On récupere l'id dans l'url
 const queryString = window.location.search;    
     const urlParams = new URLSearchParams(queryString);
@@ -16,13 +18,20 @@ async function init() {
  
   buildProduct(product);
 
-  if (product.length > 0) {
+  /*Fonction de type Callback*/
+  document.getElementById("addToCart").addEventListener ('click', function(e){
+    e.preventDefault();
+    console.log("Click");
+    checkProduct()      
+  });
+
+/*   if (product.length > 0) {
     console.log(product);
   }
 
   else if (product.length <= 0) {   
       // document.createElement("div").innerHTML = "Désolé il n'y a plus de produits";
-  }
+  } */
 }
 
 function getProduct() {
@@ -40,7 +49,9 @@ function getProduct() {
               return error;
       })    
     ); 
-  }
+}
+
+
 
 function buildProduct(product) {
 // Image
@@ -71,36 +82,41 @@ product.colors.forEach((color) => {
   option.innerHTML = color;
   select.appendChild(option);
 });
+}
 
-/*Fonction de type Callback*/
-document.getElementById("addToCart").addEventListener ('click', function(e){
-  e.preventDefault();
-  console.log("Click");
+function checkProduct(){
+  console.log(product)
+  let quantity = document.getElementById("quantity").value;
+  let color = document.getElementById("colors").value;
   
-  document.querySelector("#addToCart");
   //conditions de validation du bouton ajouter au panier
-  if (
-    // les valeurs sont créées dynamiquement au click, et à l'arrivée sur la page, tant qu'il n'y a pas d'action sur la couleur et/ou la quantité, c'est 2 valeurs sont undefined.
-    product.quantity < 1 ||
-    product.quantity > 100 ||
-    product.quantity === undefined ||
-    product.colors === "" ||
-    product.colors === undefined
-  ) {
-    // joue l'alerte
-    alert("Pour valider le choix de cet article, veuillez renseigner une couleur, et/ou une quantité valide entre 1 et 100");
-    // si ça passe le controle
-  } else {
-    // joue panier
-    Panier();
-    console.log("clic effectué");
+  if (        
+    quantity < 1 || quantity > 100) {    
+    console.log("pas bon qty")
+  } 
+  
+  if (color === ""){
+    console.log("pas de couleur selectionnée");
+  }
+  
+  if(quantity < 100 && quantity >= 1 && color != "") {
+      console.log("ok")
+      //panier()
   }
 
-  alert('Recommence !');
-  return false;
-});
 }
 
 
+/* function panier(){
+  si LS vide => 
+  productLS.push{
+    id: id,
+    color: color;
+    qty: qty  
+  }
+} */
+
 //Lancement du site, on fait tout
 init();
+
+
