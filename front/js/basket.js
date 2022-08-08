@@ -1,13 +1,14 @@
-/* on creer une page annexe qui permet de recuperer l'ensemble  des fonctions */ 
-/* Permet d'enregistrer le panier dans le localStorage et on conserve les variable (API qui conserve les données, valeur associé à la cléfs) */ 
+// export { panier } from "./product.js";
+// on creer une page annexe qui permet de recuperer l'ensemble  des fonctions 
+// Permet d'enregistrer le panier dans le localStorage et on conserve les variable (API qui conserve les données, valeur associé à la cléfs)  
 function saveBasket(basket){
     localStorage.setItem (`basket`, JSON.stringify(basket));
-    /*JSON transforme en chaine de caractere*/
+    // JSON transforme en chaine de caractere
     }
-    /* On recupere l'Item avec la clef Basket*/ 
+    // On recupere l'Item avec la clef Basket
     function getBasket(){
     let basket = localStorage = getItem(`basket`);
-    /* Si le panier est non existant */
+    // Si le panier est non existant 
     if (basket == null){
         return[];
     }else{
@@ -27,20 +28,20 @@ function saveBasket(basket){
         basket.push(product);
 
     }
-    /* Par default le basket.push est null quand on arrive sur la page donc on creer gere dans le get basket*/ 
+    // Par default le basket.push est null quand on arrive sur la page donc on creer gere dans le get basket
     basket.push(product);
     saveBasket(basket);  
     }
 
-    /* enlever un produit utilisation de filtrer pour  filtrer en fonction d'une condition*/
+    // enlever un produit utilisation de filtrer pour  filtrer en fonction d'une condition
     function removeFromBasket (product){
         let basket = getBasket ();
-    /* on filtre en inversant la condition on garde tout les produits et on supprime celui que l'on defini */
+    // on filtre en inversant la condition on garde tout les produits et on supprime celui que l'on defini 
         basket = basket.filter (p => p.id != product.id);
         saveBasket(basket);  
     }
 
-/* Modifier la quantité */
+// Modifier la quantité 
     function changeQuantity(product, quantity){
         let basket = getBasket ();
         let foundProduct = basket.find(p => p.id == product.id);
@@ -53,7 +54,7 @@ function saveBasket(basket){
         }
         }
     }
-/* calculer la quantité : à partir du panier recuperer la quantité */
+// calculer la quantité : à partir du panier recuperer la quantité 
     function getNumberProduct() {
         let basket = getBasket ();
         let number = 0;
