@@ -1,100 +1,83 @@
 //Initialisation du local storage
-let productLocalStorage = JSON.parse(localStorage.getItem("cart")) || [];
+let productLocalStorage = JSON.parse(localStorage.getItem("product")) || [];
 console.table(productLocalStorage);
-console.log('ok');
 const positionEmptyCart = document.querySelector("cart__items");
+
+let productListFiltred = [];
+
 //
 function getCart(){
     if (productLocalStorage === null || productLocalStorage === 0) {
     positionEmptyCart.innerHTML = emptyCart;
     positionEmptyCart.textContent = "Votre panier est vide";
+    console.log("Panier vide");
+
 }
-    else {
+    else (productLocalStorage !== null || productLocalStorage !== 0); {   
     console.log("Des produits sont dans le panier");
+}    
+
+// Récupération des infos à afficher via l'api
+fetch(`http://localhost:3000/api/products/`)
+.then(function (res) {
+  if (res.ok) {
+    return res.json();
+  }
+})
+.then(function (listProduct) {
+
+  let list = listProduct;
+  if (productLocalStorage && productLocalStorage.length) {
+    let itemCart = productLocalStorage.map(product => product.id);
+    // Recupérartion des ID du local Storage
+
+    productListFiltred = list.filter(e => itemCart.includes(e._id));
     
-    for (let product in productLocalStorage){
-
-    // creation de l'élément "article"
-    let productArticle = document.createElement("article");
-    document.querySelector("#cart__items").appendChild(productArticle);
-    productArticle.className = "cart__item";
-    productArticle.setAttribute('data-id', productLocalStorage[product].id);
-
-    // creation de l'élément "div"
-    let productDivImg = document.createElement("div");
-    productArticle.appendChild(productDivImg);
-    productDivImg.className = "cart__item__img";
-
-    // insertion de l'image
-    let productImg = document.createElement("img");
-    productDivImg.appendChild(productImg);
-    productImg.src = productLocalStorage[product].img;
-    productImg.alt = productLocalStorage[product].altTxt;
-    console.log('image canap ok')
-
-    // creation de l'élément "div"
-    let productItemContent = document.createElement("div");
-    productArticle.appendChild(productItemContent);
-    productItemContent.className = "cart__item__content";
-
-    // creation de l'élément "div"
-    let productItemContentTitlePrice = document.createElement("div");
-    productItemContent.appendChild(productItemContentTitlePrice);
-    productItemContentTitlePrice.className = "cart__item__content__titlePrice";
-    
-    // insertion du titre h2
-     let productName = document.createElement("h2");
-    productItemContentTitlePrice.appendChild(productName);
-    productName.innerHTML = productLocalStorage[product].name;
-    console.log(productName);
-
-    // insertion de la couleur
-    let productColor = document.createElement("p");
-    productItemContentTitlePrice.appendChild(productColor);
-    productColor.innerHTML = productLocalStorage[product].color;
-    console.log(productColor);
-
-    // insertion du prix
-    let productPrice = document.createElement("p");
-    productItemContentTitlePrice.appendChild(productPrice);
-    productPrice.innerHTML = productLocalStorage[product].price + " €";
-    console.log(productPrice);
-
-    // creation de l'élément "div"
-    let productItemContentSettings = document.createElement("div");
-    productItemContent.appendChild(productItemContentSettings);
-    productItemContentSettings.className = "cart__item__content__settings";
-
-    // creation de l'élément "div"
-    let productItemContentSettingsQuantity = document.createElement("div");
-    productItemContentSettings.appendChild(productItemContentSettingsQuantity);
-    productItemContentSettingsQuantity.className = "cart__item__content__settings__quantity";
-    
-    // insertion de "Qté : "
-    let productQty = document.createElement("p");
-    productItemContentSettingsQuantity.appendChild(productQty);
-    productQty.innerHTML = "Qté : ";
-    console.log(productQty);
-
-    // creation de la quantité
-    let productQuantity = document.createElement("input");
-    productItemContentSettingsQuantity.appendChild(productQuantity);
-    productQuantity.value = productLocalStorage[product].quantity;
-    // mettre les attributs number min="1" max="100"//
-    productQuantity.className = "itemQuantity";
-    
-    // creation de l'élément "div"
-    let productItemContentSettingsDelete = document.createElement("div");
-    productItemContentSettings.appendChild(productItemContentSettingsDelete);
-    productItemContentSettingsDelete.className = "cart__item__content__settings__delete";
-
-    // creation de "p" supprimer
-    let productSupp = document.createElement("p");
-    productItemContentSettingsDelete.appendChild(productSupp);
-    productSupp.className = "deleteItem";
-    productSupp.innerHTML = "Supprimer";
+    //Filtrer les produit de l'api en fonction de ceux present dans le LS
+    getProducts(productListFiltred);
+}
 } 
-}  
-}  
+)} 
 getCart();
-// création fontion "overallPrice"
+function getProducts(productList) {
+// Si le panier est vide
+// On crée les éléments manquants dans le LS
+for (let product in productLocalStorage) {
+    const currentProduct = productList.find(p => p._id === productLocalStorage[product].id);
+
+   //creation de l'article
+   let article =+`<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
+                    <div class="cart__item__img">
+                        <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
+                    </div>
+                    <div class="cart__item__content">
+                        <div class="cart__item__content__titlePrice">
+                            <h2>${product.name}</h2>
+                            <p>${product.price} €</p>
+                            <p>${product.color}</p>
+                        </div>
+                        <div class="cart__item__content__settings">
+                            <div class="cart__item__content__settings__quantity">
+                                <p>Qté : </p>
+                                <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="${product.quantity}">
+                            </div>
+                            <div class="cart__item__content__settings__delete">
+                                <p class="deleteItem" id="[item_Id]">Supprimer</p>
+                            </div>
+                        </div>
+                    </div>
+                </article>`
+
+}
+}  
+
+
+
+/* Pour chaque produit du LS, aller chercher les infos complémentaire 
+via un fetch (/products/id) 
+et recréer un produit complet avec les infos utilisateurs + les infos BDD
+Puis pour chaque produit du panierComplet, créer le template HTML avec les bonnes variables
+Créer une fonction de calcul du prix total
+Créer une fonction de calcul de la quantité totale
+Créer les évent pour supprimer un produit 
+(guide des étapes clées - e.target.closest) */

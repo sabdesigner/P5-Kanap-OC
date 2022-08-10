@@ -84,8 +84,7 @@ product.colors.forEach((color) => {
 });
 }
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let overallPrice = 0;
+let productLocalStorage = JSON.parse(localStorage.getItem("cart")) || [];
 
 function checkProduct(){
   console.log(product)
@@ -112,17 +111,12 @@ function checkProduct(){
 // Récupération des informations du produit sélectionné
   let optionsProduct = {
     id: productId,
-    name: product.name,
-    img: product.imageUrl,
-    altTxt: product.altTxt,
-    description: product.description,
-    color: color.value,
-    price : product.price,
-    quantity: parseInt(quantity.value, 10),
+    color: color,
+    quantity: parseInt(quantity),
   };
   
 console.log(optionsProduct);
-console.log('ok')
+
 
 //Initialisation du local storage
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
@@ -131,14 +125,15 @@ const popupConf =() =>{
 if (confirm(`Votre commande de ${quantity} ${name} ${color} est ajoutée au panier
 Pour consulter votre panier, cliquez sur OK`)){
             window.location.href ="cart.html";
+
   }   
 }
 //Si le panier comporte déjà au moins 1 article
   if (productLocalStorage) {
     const resultFind = productLocalStorage.find(
-      (e) => e.id === productId && e.color === color.value);
+      (e) => e.id === productId && e.color === color);
       
-      //Si le produit est déjà dans le panier
+//Si le produit est déjà dans le panier
   if (resultFind) {
     let newQuantity =
     parseInt(optionsProduct.quantity) + parseInt(resultFind.quantity);
@@ -146,6 +141,7 @@ Pour consulter votre panier, cliquez sur OK`)){
     localStorage.setItem("product", JSON.stringify(productLocalStorage));
     console.table(productLocalStorage);
     popupConf();
+    
 //Si le produit n'est pas dans le panier
   }
   else {
@@ -162,7 +158,7 @@ else {
   localStorage.setItem("product", JSON.stringify(productLocalStorage));
   console.table(productLocalStorage);
   popupConf();
- }
+ } 
 }   
 
 //Lancement du site, on fait tout
@@ -175,54 +171,15 @@ init();
     color: color;
     qty: qty  
   }
-} */
-/*if (checkProduct.length == null) 
-    (checkProduct.push)
-  productId + color.value + quantity.value};
-
-  if (cart.length > 0)  {
-    console.log("Il y a déjà un produit dans le panier");
-    // Usage de la méthode find() on recherche si l'id et la couleur d'un article sont déjà présents
-    let product = checkProduct.find(
-      (product) =>
-        product.id == checkProduct.productId && product.color == producheckProduct.color
-    );
-  if (product) {
-      product.quantity = product.quantity + checkProduct.quantity;
-      product.totalPrice += product.price * checkProduct.quantity;
-      localStorage.setItem("cart", JSON.stringify(checkProduct));
-      console.log("Quantité supplémentaire dans le panier.");
-      return;
-    }
-    // Si non, alors on push le nouvel article sélectionné
-    product.push(product);
-    localStorage.setItem("cart", JSON.stringify(product));
-    console.log("Le produit a été ajouté au panier");
-   }
-    else {
-    // Sinon création d'un tableau dans le lequel on push l'objet "product"
-    let createLocalStorage = [];
-    createLocalStorage.push(product);
-    localStorage.setItem("cart", JSON.stringify(createLocalStorage));
-    console.log("Le panier est vide, on ajoute le premier produit");
-    
-   }*/
-/*function panier(){
-  
-  if (productLS.length > 0) 
-    () => productLS.push;{
-    console.log("pas d'elements dans localStorage");
-  if (color.value === "") {
-      confirm ("Veuillez choisir une couleur")
-  } else if (quantity.value > 0 && quantity.value < 100) {
-// On définit l'objet à envoyé dans le ls
+}
+//On définit l'objet à envoyé dans le ls
       const productOptions = {
           id: productId,
           color: color.value,
           quantity: quantity.value,
       }
-// Fonction récupérer dans le fichier localStorage.js
-      addToCart(productOptions)
+// Fonction récupérer dans le fichier ls
+ addToCart(productOptions)
   } 
   else if (quantity.value > 100) {
   confirm("Vous ne pouvez pas commander plus de 100 produits par commande")
