@@ -1,3 +1,35 @@
+
+/*let numberInput = document.getElementById("itemQuantity");
+function eventCreation() {
+  document.getElementById("check-btn").addEventListener("click", checkNumber);
+}
+function createErrorMsgHTMLElement() {
+  let errorElement = document.createElement("div");
+  errorElement.setAttribute("id", "error-msg");
+  numberInput.after(errorElement);
+}
+function checkNumber() {
+  // On suppose que tout est bon, donc on cache les erreurs au début
+  hideError();
+  if (numberInput.value >= 1) {
+    alert("Votre quantité est de ${quantity}");
+  } else if (numberInput.value > 1) {
+    displayError("Veuillez sélectionner un article au minimum");
+  } else if (numberInput.value <= 100) {
+    displayError("Veuillez sélectionner moins de cent articles");
+  }
+}
+function displayError(msg) {
+  let errorElement = document.getElementById("error-msg");
+  errorElement.innerText = msg;
+}
+function hideError() {
+  let errorElement = document.getElementById("error-msg");
+  errorElement.innerText = "";
+}*/
+
+
+
 // import { panier } from "./basket.js";
 
 // On récupere l'id dans l'url
@@ -46,11 +78,11 @@ function getProduct() {
         .catch((error) => {
           // Si erreur dans URL, retourne l'erreur pour pas bloquer la création de la page
               alert("Nous n'avons pas réussi à afficher nos canapés. Avez vous bien lancé le serveur local (Port 3000) ? Si le problème persiste prenons contact");
+              
               return error;
       })    
     ); 
 }
-
 
 
 function buildProduct(product) {
@@ -86,26 +118,31 @@ product.colors.forEach((color) => {
 
 let productLocalStorage = JSON.parse(localStorage.getItem("cart")) || [];
 
+
+
 function checkProduct(){
   console.log(product)
   let quantity = document.getElementById("quantity").value;
   let color = document.getElementById("colors").value;
-  
+
+ 
   //conditions de validation du bouton ajouter au panier
   if (        
     quantity < 1 || quantity > 100) {    
     console.log("pas bon qty")
-    confirm("Veuillez sélectionner le nombre d'articles souhaités");
+    /*confirm("Veuillez sélectionner le nombre d'articles souhaités");*/
   } 
   
   if (color === ""){
     console.log("pas de couleur selectionnée");
-    confirm("Veuillez sélectionner une couleur");
+    document.createElement("div").innerHTML = "Veuillez sélectionner une couleur";
+
+    /*confirm("Veuillez sélectionner une couleur");*/
   }
   
   if(quantity < 100 && quantity >= 1 && color != "") {
       console.log("ok")
-      confirm("Votre article a bien été ajouté au panier");
+      /*confirm("Votre article a bien été ajouté au panier");*/
   }
 
 // Récupération des informations du produit sélectionné
@@ -120,6 +157,7 @@ console.log(optionsProduct);
 
 //Initialisation du local storage
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
+
 //Fenetre de confirmation
 const popupConf =() =>{ 
 if (confirm(`Votre commande de ${quantity} ${name} ${color} est ajoutée au panier

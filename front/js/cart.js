@@ -1,21 +1,27 @@
-//Initialisation du local storage
-let productLocalStorage = JSON.parse(localStorage.getItem("product")) || [];
-console.table(productLocalStorage);
 const positionEmptyCart = document.querySelector("cart__items");
-
 let productListFiltred = [];
 
-//
+//  Cette fonction fait GetLocalStorage et retourne les données
 function getCart(){
-    if (productLocalStorage === null || productLocalStorage === 0) {
+
+//Initialisation du local storage
+    let LocalStorage = JSON.parse(localStorage.getItem("product")) || [];
+    console.table(LocalStorage);
+
+    if (LocalStorage === null || LocalStorage === 0) {
     positionEmptyCart.innerHTML = emptyCart;
     positionEmptyCart.textContent = "Votre panier est vide";
     console.log("Panier vide");
 
+    return 
+
+    }
+        else (LocalStorage !== null || LocalStorage !== 0); {   
+        console.log("Des produits sont dans le panier");
+        return LocalStorage
+    }    
 }
-    else (productLocalStorage !== null || productLocalStorage !== 0); {   
-    console.log("Des produits sont dans le panier");
-}    
+let productLocalStorage = getCart();
 
 // Récupération des infos à afficher via l'api
 fetch(`http://localhost:3000/api/products/`)
@@ -24,21 +30,40 @@ fetch(`http://localhost:3000/api/products/`)
     return res.json();
   }
 })
-.then(function (listProduct) {
+.then(function (produitsAPI) {
+    console.log("produits du LS",productLocalStorage)
+    // Tableau vide qui contiendra les données du LS (qty, color) et les données de l'api (id, name, price, color, imageUrl)
+    let panierComplet = []
+ 
+    // Pour chaque produit existant dans l'API
+    produitsAPI.map(productAPI => {
+        // Et pour chaque produit existant dans le LS
+        productLocalStorage.map(itemLS => {
+            // on regarde si l'ID correspond entre les deux
+            if (productAPI._id === itemLS.id) {
+                // Si oui, le produit est trouvé et ajouté dans le panierComplet (ou on pourra trouver toutes les infos nécéssaire à l'utilisateur)
+                panierComplet.push({
+                    id: productAPI._id,
+                    name: productAPI.name,
+                    price: productAPI.price,
+                    color: itemLS.color,
+                    quantity: itemLS.quantity,
+                    imageUrl: productAPI.imageUrl
+                })
+            }
+        }
+        )
+    })
 
-  let list = listProduct;
-  if (productLocalStorage && productLocalStorage.length) {
-    let itemCart = productLocalStorage.map(product => product.id);
-    // Recupérartion des ID du local Storage
-
-    productListFiltred = list.filter(e => itemCart.includes(e._id));
+    // le panierComplet est rempli
+    console.log("panierComplet",panierComplet)
     
-    //Filtrer les produit de l'api en fonction de ceux present dans le LS
-    getProducts(productListFiltred);
-}
-} 
-)} 
-getCart();
+    // Créer les bloc HTML
+    getProducts(panierComplet);
+     
+    }
+)
+
 function getProducts(productList) {
 // Si le panier est vide
 // On crée les éléments manquants dans le LS
@@ -68,9 +93,80 @@ for (let product in productLocalStorage) {
                     </div>
                 </article>`
 
+console.log("Elements manquants", productList)
 }
-}  
+}
+// Modifier la quantité 
+/*function changeQuantity(product, quantity){
+    let panierComplet = getProducts ();
+    let foundProduct = panierComplet.find(p => p.id == product.id);
+    if (foundProduct !=undefined){  
+    foundProduct.quantity += quantity;
+    if (foundProduct.quantity <= 0){
+        removeProducts(product);
+      } else {
+        saveProducts(panierComplet);
+    }
+    }
+}
+// calculer la quantité : à partir du panier recuperer la quantité 
+function getNumberProducts() {
+    let panierComplet = getProducts ();
+    let number = 0;
+    for (let product of panierComplet){
+        number += product.quantity;   
+    } 
+    return number;
+} 
 
+// calculer le prix : à partir du panier recuperer le prix
+function getNumberPrice() {
+let panierComplet = getProducts ();
+let total = 0;
+for (let product of panierComplet){
+    total += product.quantity * product.price;   
+} 
+return total;
+} */
+
+function changeQuantity() {
+    let itemQuantity = document.querySelectorAll('.itemQuantity');
+    for (let q = 0; q < itemQuantity.length; q++) {
+        itemQuantity[q].addEventListener('change', (event) => {
+      event.preventDefault();
+      //on ajoute la nouvelle quantité avec les autres éléments 
+      let itemNewQuantity = itemQuantity[q].value;
+      const newPannierComplet = {
+      id: productAPI[q]._id,
+      name: productAPI[q].name,
+      price: productAPI[q].price,
+      color: itemLS[q].color,
+      quantity: itemNewQuantity,
+      imageUrl: productAPI[q].imageUrl
+    };
+    // On actualise
+    PannierComplet[q]= newPannierComplet;
+    alert('Votre panier est à jour.');
+    
+    //idem principe pour delete avec id et la couleur séléctionnés par le bouton supprimer
+})
+}
+changeQuantity();
+} 
+
+/*quantityTotal();
+document.querySelectorAll(".itemQuantity").forEach(quantityButton => {
+    quantityButton.addEventListener("change", (e) => {
+        pannierComplet.changeQuantity({
+            quantity: parseInt(e.target.value),
+            color: e.target.closest(".cart__item").product.color,
+            _id: e.target.closest(".cart__item").product.id
+        });
+        if (parseInt(e.target.value) == 0) {
+            e.target.closest(".cart__item").remove();
+    }  })
+});
+quantityTotal();*/
 
 
 /* Pour chaque produit du LS, aller chercher les infos complémentaire 
