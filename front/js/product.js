@@ -32,6 +32,15 @@ function hideError() {
 
 // import { panier } from "./basket.js";
 
+ //Creation 
+ let element = document.createElement("div");
+ element.innerHTML = "";
+ let elementQuantity = document.getElementById("quantity");
+ elementQuantity.after(element);
+ let elt = document.createElement ("div");
+ let eltColor = document.getElementById("colors");
+ eltColor.after(elt);
+
 // On récupere l'id dans l'url
 const queryString = window.location.search;    
     const urlParams = new URLSearchParams(queryString);
@@ -50,7 +59,8 @@ async function init() {
  
   buildProduct(product);
 
-  /*Fonction de type Callback*/
+
+// Fonction de type Callback
   document.getElementById("addToCart").addEventListener ('click', function(e){
     e.preventDefault();
     console.log("Click");
@@ -122,6 +132,8 @@ let productLocalStorage = JSON.parse(localStorage.getItem("cart")) || [];
 
 function checkProduct(){
   console.log(product)
+  element.innerHTML="";
+  elt.innerHTML ="";
   let quantity = document.getElementById("quantity").value;
   let color = document.getElementById("colors").value;
 
@@ -130,20 +142,21 @@ function checkProduct(){
   if (        
     quantity < 1 || quantity > 100) {    
     console.log("pas bon qty")
+    element.innerHTML = "Veuillez sélectionner le nombre d'articles souhaités"
     /*confirm("Veuillez sélectionner le nombre d'articles souhaités");*/
   } 
   
   if (color === ""){
     console.log("pas de couleur selectionnée");
-    document.createElement("div").innerHTML = "Veuillez sélectionner une couleur";
+    elt.innerHTML = "Veuillez sélectionner une couleur"
 
     /*confirm("Veuillez sélectionner une couleur");*/
   }
   
   if(quantity < 100 && quantity >= 1 && color != "") {
       console.log("ok")
-      /*confirm("Votre article a bien été ajouté au panier");*/
-  }
+    alert("Votre article a bien été ajouté au panier");
+  
 
 // Récupération des informations du produit sélectionné
   let optionsProduct = {
@@ -159,13 +172,13 @@ console.log(optionsProduct);
 let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 
 //Fenetre de confirmation
-const popupConf =() =>{ 
+/*const popupConf =() =>{ 
 if (confirm(`Votre commande de ${quantity} ${name} ${color} est ajoutée au panier
 Pour consulter votre panier, cliquez sur OK`)){
             window.location.href ="cart.html";
 
   }   
-}
+}*/
 //Si le panier comporte déjà au moins 1 article
   if (productLocalStorage) {
     const resultFind = productLocalStorage.find(
@@ -178,7 +191,7 @@ Pour consulter votre panier, cliquez sur OK`)){
     resultFind.quantity = newQuantity;
     localStorage.setItem("product", JSON.stringify(productLocalStorage));
     console.table(productLocalStorage);
-    popupConf();
+ 
     
 //Si le produit n'est pas dans le panier
   }
@@ -186,7 +199,7 @@ Pour consulter votre panier, cliquez sur OK`)){
     productLocalStorage.push(optionsProduct);
     localStorage.setItem("product", JSON.stringify(productLocalStorage));
     console.table(productLocalStorage);
-    popupConf();
+  
   }
 //Si le panier est vide
   }
@@ -195,10 +208,10 @@ else {
   productLocalStorage.push(optionsProduct);
   localStorage.setItem("product", JSON.stringify(productLocalStorage));
   console.table(productLocalStorage);
-  popupConf();
+
  } 
 }   
-
+}
 //Lancement du site, on fait tout
 init();
 

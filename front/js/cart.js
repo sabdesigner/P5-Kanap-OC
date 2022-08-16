@@ -1,5 +1,5 @@
-const positionEmptyCart = document.querySelector("cart__items");
 let productListFiltred = [];
+let elementQuantity = document.getElementById("cart__items");
 
 //  Cette fonction fait GetLocalStorage et retourne les données
 function getCart(){
@@ -8,12 +8,13 @@ function getCart(){
     let LocalStorage = JSON.parse(localStorage.getItem("product")) || [];
     console.table(LocalStorage);
 
-    if (LocalStorage === null || LocalStorage === 0) {
-    positionEmptyCart.innerHTML = emptyCart;
-    positionEmptyCart.textContent = "Votre panier est vide";
+    if (LocalStorage === null || LocalStorage === 0 || LocalStorage === [] || LocalStorage.length === 0) {
+        let element = document.createElement("div");
+        element.innerHTML = "Votre panier est vide";
+        elementQuantity.appendChild(element);
+        
     console.log("Panier vide");
-
-    return 
+    return LocalStorage
 
     }
         else (LocalStorage !== null || LocalStorage !== 0); {   
@@ -56,22 +57,20 @@ fetch(`http://localhost:3000/api/products/`)
     })
 
     // le panierComplet est rempli
-    console.log("panierComplet",panierComplet)
+    console.log("panierComplet", panierComplet)
     
     // Créer les bloc HTML
-    getProducts(panierComplet);
+    createProducts(panierComplet);
      
     }
 )
 
-function getProducts(productList) {
+function createProducts(productList) {
 // Si le panier est vide
-// On crée les éléments manquants dans le LS
-for (let product in productLocalStorage) {
-    const currentProduct = productList.find(p => p._id === productLocalStorage[product].id);
-
-   //creation de l'article
-   let article =+`<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
+for (let product of productList) {
+    
+//creation de l'article
+elementQuantity.innerHTML += `<article class="cart__item" data-id="${product.id}" data-color="${product.color}">
                     <div class="cart__item__img">
                         <img src="${product.imageUrl}" alt="Photographie d'un canapé ${product.name}">
                     </div>
@@ -93,7 +92,6 @@ for (let product in productLocalStorage) {
                     </div>
                 </article>`
 
-console.log("Elements manquants", productList)
 }
 }
 // Modifier la quantité 
