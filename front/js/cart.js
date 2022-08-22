@@ -92,24 +92,104 @@ elementQuantity.innerHTML += `<article class="cart__item" data-id="${product.id}
                     </div>
                 </article>`
 
+            }
+        }
+
+//Evènements de suppression sur les boutons supprimer avec closest
+function DeleteProduct(){
+    let selectSupp = document.querySelectorAll(".deleteItem");
+    console.log("selectSupp");
+    selectSupprimer.forEach((selectSupp) => {
+        selectSupp.addEventListener("click",(event)=>{
+            event.preventDefault();
+            //on pointe le parent hiéarchique <article>`du lien à supp
+            let myProduct = selectSupp.closest(`article`);
+            console.log("myProduct");
+            //on filtre dans le LS
+            productlocalStorage = productlocalStorage.filter
+            (product => product.id != idDelete || product.color !== colorDelete) 
+            //on met à jour le LS
+            localStorage.setItem("product" , JSON.stringify(productlocalStorage.length == 0));
+            console.log("localStorage")            
+            //message alerte 
+            alert("ce produit va être supprimé de votre panier")
+           
+            // on supp le bloc produit du panier
+            if (myProduct.parentNode){
+                myProduct.parentNode.removeChild(myProduct);
+            }
+            // si le panier est vide (le localStorage est vide)
+            if (localStorage === null || localStorage == 0){
+            console.log("Panier vide");
+            } 
+            else {
+            //on calcule TotalProductPrice et TotalProductQty
+             getNumberProducts();
+             getNumberPrice();
+         } 
+         } );
+    })
 }
+
+//Evènements sur les inputs quantité 
+function changeQty() {
+// On sélectionne l'élément html (input) dans lequel la quantité est modifiée
+let changeQty = document.querySelectorAll(".itemQuantity");
+changeQty.forEach((item) => {
+//On écoute le changement sur itemQuantity
+item.addEventListener("change", (event) => {
+event.preventDefault();
+     for (let i in productLocalStorage){
+     choiceQty = Number(changeQty[i].value);
+     console.log("MyQty",choiceQty);
+//si la quantité est comprise entre 1 et 100 et que c'est un nombre entier
+//on met à jour la quantité dans le localStorage et le DOM
+    if(changeQty[i].value > 0 && changeQty[i].value <= 100 && Number.isInteger(choiceQty)){
+    parseChangeQty = parseInt(changeQty[i].value);
+
+    productLocalStorage[i].quantityProduct = parseChangeQty;
+    localStorage.setItem("produit", JSON.stringify(productLocalStorage));
+//on calcule TotalProductPrice et TotalProductQty
+    getNumberProducts();
+    getNumberPrice();
 }
-// Modifier la quantité 
-/*function changeQuantity(product, quantity){
-    let panierComplet = getProducts ();
-    let foundProduct = panierComplet.find(p => p.id == product.id);
-    if (foundProduct !=undefined){  
-    foundProduct.quantity += quantity;
-    if (foundProduct.quantity <= 0){
-        removeProducts(product);
-      } else {
-        saveProducts(panierComplet);
+//sinon, on remet dans le DOM la quantité indiquée dans le localStorage et on indique un message d'erreur
+else{
+    changeQty[i].value = productLocalStorage[i].quantity;
+    messageErrorQty = true;
     }
-    }
+if(messageErrorQty){       
+    alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
+                    } 
+                } 
+        });
+    });
 }
-// calculer la quantité : à partir du panier recuperer la quantité 
+
+//Fonction de calcul du total + fonction de calcul de la quantité (basé sur le panier complet) + affichage dans le HTML
+
+/*function totalProductsPrice (){
+    // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
+    totalProductPricePanierComplet = quantityProductPanierComplet * priceProductPanierComplet;
+    // Calcul du prix total du panier
+    totalPrice += totalProductPricePanierComplet;
+    document.getElementById("totalPrice").innerText = totalPrice; 
+    }
+
+function totalProductsQuantity(){
+        totalQuantity += parseInt(quantityProductPanierComplet);
+        console.log("Total quantité panier",totalQuantity);
+        document.getElementById("totalQuantity").innerText = totalQuantity;
+}
+
+function totaux (){
+    totalProductsQuantity();
+    totalProductsPrice();
+    
+}*/
+
 function getNumberProducts() {
-    let panierComplet = getProducts ();
+    let panierComplet = getCart ();
     let number = 0;
     for (let product of panierComplet){
         number += product.quantity;   
@@ -119,59 +199,24 @@ function getNumberProducts() {
 
 // calculer le prix : à partir du panier recuperer le prix
 function getNumberPrice() {
-let panierComplet = getProducts ();
+let panierComplet = getCart ();
 let total = 0;
 for (let product of panierComplet){
     total += product.quantity * product.price;   
 } 
 return total;
-} */
-
-function changeQuantity() {
-    let itemQuantity = document.querySelectorAll('.itemQuantity');
-    for (let q = 0; q < itemQuantity.length; q++) {
-        itemQuantity[q].addEventListener('change', (event) => {
-      event.preventDefault();
-      //on ajoute la nouvelle quantité avec les autres éléments 
-      let itemNewQuantity = itemQuantity[q].value;
-      const newPannierComplet = {
-      id: productAPI[q]._id,
-      name: productAPI[q].name,
-      price: productAPI[q].price,
-      color: itemLS[q].color,
-      quantity: itemNewQuantity,
-      imageUrl: productAPI[q].imageUrl
-    };
-    // On actualise
-    PannierComplet[q]= newPannierComplet;
-    alert('Votre panier est à jour.');
-    
-    //idem principe pour delete avec id et la couleur séléctionnés par le bouton supprimer
-})
-}
-changeQuantity();
 } 
 
-/*quantityTotal();
-document.querySelectorAll(".itemQuantity").forEach(quantityButton => {
-    quantityButton.addEventListener("change", (e) => {
-        pannierComplet.changeQuantity({
-            quantity: parseInt(e.target.value),
-            color: e.target.closest(".cart__item").product.color,
-            _id: e.target.closest(".cart__item").product.id
-        });
-        if (parseInt(e.target.value) == 0) {
-            e.target.closest(".cart__item").remove();
-    }  })
-});
-quantityTotal();*/
+function totalProductsPrice (){
+    // Calcul du prix total de chaque produit en multipliant la quantité par le prix unitaire
+    totalProductPricePanierComplet = getNumberProducts * getNumberPrice;
+    // Calcul du prix total du panier
+    getNumberPrice += totalProductPricePanierComplet;
+    document.getElementById("totalPrice").innerText = totalPrice; 
+    }
 
-
-/* Pour chaque produit du LS, aller chercher les infos complémentaire 
-via un fetch (/products/id) 
-et recréer un produit complet avec les infos utilisateurs + les infos BDD
-Puis pour chaque produit du panierComplet, créer le template HTML avec les bonnes variables
-Créer une fonction de calcul du prix total
-Créer une fonction de calcul de la quantité totale
-Créer les évent pour supprimer un produit 
-(guide des étapes clées - e.target.closest) */
+function total (){
+    getNumberProducts();
+    getNumberPrice();
+ 
+}
