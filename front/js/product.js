@@ -1,37 +1,3 @@
-
-/*let numberInput = document.getElementById("itemQuantity");
-function eventCreation() {
-  document.getElementById("check-btn").addEventListener("click", checkNumber);
-}
-function createErrorMsgHTMLElement() {
-  let errorElement = document.createElement("div");
-  errorElement.setAttribute("id", "error-msg");
-  numberInput.after(errorElement);
-}
-function checkNumber() {
-  // On suppose que tout est bon, donc on cache les erreurs au début
-  hideError();
-  if (numberInput.value >= 1) {
-    alert("Votre quantité est de ${quantity}");
-  } else if (numberInput.value > 1) {
-    displayError("Veuillez sélectionner un article au minimum");
-  } else if (numberInput.value <= 100) {
-    displayError("Veuillez sélectionner moins de cent articles");
-  }
-}
-function displayError(msg) {
-  let errorElement = document.getElementById("error-msg");
-  errorElement.innerText = msg;
-}
-function hideError() {
-  let errorElement = document.getElementById("error-msg");
-  errorElement.innerText = "";
-}*/
-
-
-
-// import { panier } from "./basket.js";
-
  //Creation 
  let element = document.createElement("div");
  element.innerHTML = "";
@@ -214,27 +180,3 @@ else {
 }
 //Lancement du site, on fait tout
 init();
-
-/* function panier(){
-  si LS vide => 
-  productLS.push{
-    id: id,
-    color: color;
-    qty: qty  
-  }
-}
-//On définit l'objet à envoyé dans le ls
-      const productOptions = {
-          id: productId,
-          color: color.value,
-          quantity: quantity.value,
-      }
-// Fonction récupérer dans le fichier ls
- addToCart(productOptions)
-  } 
-  else if (quantity.value > 100) {
-  confirm("Vous ne pouvez pas commander plus de 100 produits par commande")
-  }  
-  else {
-  console.log(`des éléments sont présents dans votre panier`);
-}*/

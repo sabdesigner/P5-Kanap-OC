@@ -71,25 +71,3 @@ function buildHTML() {
   }
 //Lancement du site, on fait tout
 init();
-
-
-/* items.innerHTML += `<a href="./product.html?id=${product._id}">
-        <article>
-          <img src="${product.imageUrl}" alt="${product.altTxt}">
-          <h3 class="productName">${product.name}</h3>
-          <p class="productDescription">${product.description}</p>
-        </article>
-        </a>`;
-        } */
-
-/*fonction de type Callback
-document.getElementById("items").addEventListener ('click', function(e){
-e.preventDefault();
-
-alert('Recommence !');
-return false;
-}); */
-
-//let searchParams = new URLSearchParams ("./product.html?id=${product._id")
-//console.log (searchParams.has("id"))
-

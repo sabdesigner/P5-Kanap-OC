@@ -69,7 +69,7 @@ fetch(`http://localhost:3000/api/products/`)
     calculQuantite()
     calculTotalPrice()    
     eventDeleteProduct()
-    eventupdateQuantity()   
+    eventupdateQuantity() 
 
     }
 )
@@ -149,73 +149,12 @@ function deleteProduct(event){
             
 }
 
-// fonction pour modifier la quantité 
-/*const changeQty = () => {
-    let qtyChange = document.querySelectorAll(".itemQuantity");
-        for (let l = 0; l < qtyChange.length; l++) {
-            qtyChange[l].addEventListener("change", (e) => {
-                    e.preventDefault();
-
-                    let qtyInputValue = qtyChange[l].valueAsNumber; 
-                    // on stock la quantité reçu par la boucle dans une variable
-
-                    productLocalStorage[l].addQuantity = qtyInputValue; 
-                    // on récupere la quantité du localstorage 
-
-                    calculTotalPrice(); 
-                    // on rappelle la fonction pour que le prix s'actualise en temps réel. 
-                    console.log(calculTotalPrice());
-
-                    localStorage.setItem("product", JSON.stringify(productLocalStorage)); 
-                    // on modifie ou supprime la quantité dans le localStorage
-
-                });
-            }
-        };
-        changeQty();*/
-
-//Evènements sur les inputs quantité 
-/*function changeQty() {
-// On sélectionne l'élément html (input) dans lequel la quantité est modifiée
-let changeQty = document.querySelectorAll(".itemQuantity");
-changeQty.forEach((item) => {
-//On écoute le changement sur itemQuantity
-item.addEventListener("change", (event) => {
-event.preventDefault();
-     for (let i in productLocalStorage){
-     choiceQty = Number(changeQty[i].value);
-     console.log("MyQty",choiceQty);
-//si la quantité est comprise entre 1 et 100 et que c'est un nombre entier
-//on met à jour la quantité dans le localStorage et le DOM
-    if(changeQty[i].value > 0 && changeQty[i].value <= 100 && Number.isInteger(choiceQty)){
-    parseChangeQty = parseInt(changeQty[i].value);
-
-    productLocalStorage[i].quantityProduct = parseChangeQty;
-    localStorage.setItem("product", JSON.stringify(productLocalStorage));
-    
-    // On recalcule
-        calculQuantite()
-        calculTotalPrice()  
-}
-//sinon, on remet dans le DOM la quantité indiquée dans le localStorage et on indique un message d'erreur
-else{
-    changeQty[i].value = productLocalStorage[i].quantity;
-    messageErrorQty = true;
-    }
-if(messageErrorQty){       
-    alert("La quantité d'un article (même référence et même couleur) doit être comprise entre 1 et 100 et être un nombre entier. Merci de rectifier la quantité choisie.");
-                    } 
-                } 
-        });
-    });
-}*/
-
 //Evènements sur les inputs quantité 
 function eventupdateQuantity(){
     let changeQty = document.querySelectorAll(".itemQuantity");
     console.log("changeQty",changeQty);
     changeQty.forEach((item) => {
-        item.addEventListener("change",console.log, (event)=>{
+        item.addEventListener("change",(event)=>{
             updateQuantity(event) 
          } );
     })
@@ -223,26 +162,36 @@ function eventupdateQuantity(){
 
 function updateQuantity(event){  
     event.preventDefault();
+    
+    choiceQty = Number(event.target.value);
     //console.log(event.target)
-    choiceQty = Number(item.value);
 
     // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
-    let myArticle = item.closest(`article`);
+    let myArticle = event.target.closest(`article`);
+    //console.log(myArticle);
+    let colorMyArticle = myArticle.getAttribute("data-color");
+    //console.log(colorMyArticle);
+    let idMyArticle = myArticle.getAttribute("data-id");
+    //console.log(idMyArticle);
+
 
     // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
-    const resultIndex = productLocalStorage.findIndex(item => item.id === id === id && item.color === color);
-    console.log("resultIndex", resultIndex);
-
-    resultIndex.quantityProduct = item.valueAsNumber;
-
+    const resultIndex = productLocalStorage.findIndex(item => item.id === idMyArticle && item.color === colorMyArticle);
+    //console.log("resultIndex", resultIndex);
 
     // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
     //...on met à jour la quantité dans le localStorage et le DOM
-    if(choiceQty > 0 && choiceQty <= 100 && Number.isInteger(choiceQty)){ 
+    if(choiceQty > 0 && choiceQty <= 100){ 
         
-        localStorage.setItem("product", JSON.stringify(productLocalStorage));
+    
+        let LS = JSON.parse(localStorage.getItem("product")) 
+        //console.log(LS[resultIndex])
+        LS[resultIndex].quantity = choiceQty
+
+        localStorage.setItem("product", JSON.stringify(LS));
         // Maj du produit du panierComplet
-         panierComplet.splice(resultIndex);
+         panierComplet[resultIndex].quantity = choiceQty;
+         console.log(panierComplet)
 
     // Et, on recalcule la quantité et le prix total du panier  
     // On recalcule
@@ -277,153 +226,38 @@ function calculTotalPrice(){
 }
 
 // le formulaire (en cours)
-fetch("http://localhost:3000/api/products/order", {
-    method: "POST",
-    //??
-    }
-  )
-    .then((res) => res.json())
-    .then((data) => {
-      const orderId = data.orderId //??
-     // adress confirmation  + orderId
-    })
-    .catch((err) => console.error(err))
+document.getElementById("order").addEventListener ('click', function(e){
+    e.preventDefault();
+    console.log("Click");
+    checkInput()      
+  });
 
-// quand on clic sur le btn "commander"
-const boutonCommander = document.getElementsByClassName(".cart__order");
-// verif des erreurs
-let errorFormulaireFirstName = true;
-let errorFormulaireLastName = true;
-let errorFormulaireAddress = true;
-let errorFormulaireCity = true;
-let errorFormulaireEmail = true;
+const firstName = document.getElementById("firstName");
+const firstNameErrorMsg = document.getElementById ("firstNameErrorMsg");
+const noNumbers =new RegExp ("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
+checkInput (firstName, noNumbers, firstNameErrorMsg);
 
-// les regles 
-let txtRegex = new RegExp("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
-let addressRegex = new RegExp("^[^.?!:;,/\\/_-]([, .:;'-]?[0-9a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
-let emailRegex = new RegExp("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
+const lastName = document.getElementById("lastName");
+const lastNameErrorMsg = document.getElementById ("lastNameErrorMsg");
+checkInput (lastName, noNumbers, lastNameErrorMsg);
 
-// infos à recup du formulaire
-let inputfirstName = document.getElementById("firstName");
-let inputname = document.getElementById("lastName");
-let inputaddress = document.getElementById("address");
-let inputCity = document.getElementById("city");
-let inputEmail = document.getElementById("email");
+const address = document.getElementById("address");
+const addressErrorMsg = document.getElementById ("addressErrorMsg");
+checkInput (address, noNumbers, addressErrorMsg);
 
-// Ecoute du contenu du champ "prénom", Vérification du prénom et affichage d'un message si celui-ci n'est pas correct
-   inputFirstName.addEventListener('change', function() {
-    let checkValueFirstName;
-    let firstNameErrorMsg = inputFirstName.nextElementSibling;
-    checkValueFirstName = txtRegex.test(inputFirstName.value);
-    if (checkValueFirstName) {
-        firstNameErrorMsg.innerText = '';
-        errorFormulaireFirstName = false;
-    } 
-    else {
-        firstNameErrorMsg.innerText = 'Veuillez indiquer un prénom.';
-        errorFormulaireFirstName = true;
-    }
-});
+const city = document.getElementById("city");
+const cityErrorMsg = document.getElementById ("cityErrorMsg");
+checkInput (city, noNumbers, cityErrorMsg);
 
-// Ecoute du contenu du champ "nom", Vérification du nom et affichage d'un message si celui-ci n'est pas correct
-inputLastName.addEventListener('change', function() {
-    let checkValueLastName;
-    let lastNameErrorMsg = inputLastName.nextElementSibling;
-    checkValueLastName = txtRegex.test(inputLastName.value);
-    if (checkValueLastName) {
-        lastNameErrorMsg.innerText = '';
-        errorFormulaireLastName = false;
-    }
-    else {
-        lastNameErrorMsg.innerText = 'Veuillez indiquer un nom de famille.';
-        errorFormulaireLastName = true;
-    }
-});
-
-// Ecoute du contenu du champ "adresse", Vérification de l'adresse et affichage d'un message si celle-ci n'est pas correcte
-inputAddress.addEventListener('change', function() {
-    let checkValueAddress;
-    let addressErrorMsg = inputAddress.nextElementSibling;
-    checkValueAddress = addressRegex.test(inputAddress.value);
-    if (checkValueAddress) {
-        addressErrorMsg.innerText = '';
-        errorFormulaireAddress = false;
-    }
-    else {
-        addressErrorMsg.innerText = 'Veuillez indiquer une adresse.';
-        errorFormulaireAddress = true;
-    }
-});
-
-// Ecoute du contenu du champ "ville", Vérification de la ville et affichage d'un message si celle-ci n'est pas correcte
-inputCity.addEventListener('change', function() {
-    let checkValueCity;
-
-    let cityErrorMsg = inputCity.nextElementSibling;
-    checkValueCity = txtRegex.test(inputCity.value);
-    if (checkValueCity) {
-        cityErrorMsg.innerText = '';
-        errorFormulaireCity = false;
-    } else {
-        cityErrorMsg.innerText = 'Veuillez indiquer le nom d\'une ville.';
-        errorFormulaireCity = true;
-    }
-});
-
-// Ecoute du contenu du champ "email", Vérification de l'email et affichage d'un message si celui-ci n'est pas correct
-inputEmail.addEventListener('change', function() {
-    let checkValueEmail;
-    let emailErrorMsg = inputEmail.nextElementSibling;
-    checkValueEmail = emailRegex.test(inputEmail.value);
-    if (checkValueEmail) {
-        emailErrorMsg.innerText = '';
-        errorFormulaireEmail = false;
-    }
-    else {
-        emailErrorMsg.innerText = 'Veuillez renseigner un email.';
-        errorFormulaireEmail = true;
-    }
-});
-
-// création d'un tableau avec les entrées prénom nom adresse ville email
-/*[firstName,lastName, address, city, email ].forEach(element) => {
-element.addEventListener("change", () => {
-    const (regex, errorMessage)= MyRegex(element)
-    const errorMsg = function getError(element)
-    checkInput (element, regex, errorMessage)
-} 
-)}*/
-
-/*function getError (element)
-if (element === firstName) return document.getElementById ("firstNameErrorMsg")
-if (element === lastName) return document.getElementById ("LastNameErrorMsg")
-if (element === address) return document.getElementById ("addressErrorMsg")
-if (element === city) return document.getElementById ("cityErrorMsg")
+const email = document.getElementById("email");
+const emailErrorMsg = document.getElementById ("emailErrorMsg");
+const emailReg =new RegExp ("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
+checkInput (email, emailReg, emailErrorMsg)
 
 
-
-// On cree une fonction de regles
-function MyRegex (element){
-    const emailReg = document.getElementById("email")
-    const specialCharacters = new RegExp("/^[A-Za-z0-9+_.-]+@(.+)$/")
-
-    const emailMessage = "Merci de mettre une adresse mail juste"
-    const specialCharactersMessage = "Vos infos ne peuvent contenir des caractères spéciaux"
+function checkInput (element, regex, errorMsg)
+{
+if (RegExp.test (element.value)){
+    errorMsg.innerHTML ="Merci de mettre remplir le champ"
+}   
 }
-
-document.getElementById(".order").addEventListener ("click", (event) =>{
-
-const firstNameErrorMsg = document.getElementById("firstNameErrorMsg")
-const lastNameErrorMsg = document.getElementById("lastNameErrorMsg")
-const addressErrorMsg = document.getElementById("addressErrorMsg")
-const cityErrorMsg = document.getElementById("cityErrorMsg")
-const emailErrorMsg = document.getElementById("emailErrorMsg")
-
-})
-
-//verification des entrées du formulaire
-function checkInput (element, errorMessage, regex){
-        if (regex.test(element.value){ 
-            errorMessage.innerHTML = errorMessage
-        });
-    }*/
