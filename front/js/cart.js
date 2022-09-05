@@ -226,38 +226,106 @@ function calculTotalPrice(){
 }
 
 // le formulaire (en cours)
-document.getElementById("order").addEventListener ('click', function(e){
+/*document.getElementById("order").addEventListener ('click', function(e){
     e.preventDefault();
     console.log("Click");
     checkInput()      
-  });
+  });*/
 
-const firstName = document.getElementById("firstName");
-const firstNameErrorMsg = document.getElementById ("firstNameErrorMsg");
-const noNumbers =new RegExp ("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
-checkInput (firstName, noNumbers, firstNameErrorMsg);
+let firstName = document.getElementById("firstName");
+let firstNameErrorMsg = document.getElementById ("firstNameErrorMsg");
+let noNumbers = new RegExp ("^[^.?!:;,/\\/_-]([. '-]?[a-zA-Zàâäéèêëïîôöùûüç])+[^.?!:;,/\\/_-]$");
+/*checkInput (firstName, noNumbers, firstNameErrorMsg);*/
 
-const lastName = document.getElementById("lastName");
-const lastNameErrorMsg = document.getElementById ("lastNameErrorMsg");
-checkInput (lastName, noNumbers, lastNameErrorMsg);
+let lastName = document.getElementById("lastName");
+let lastNameErrorMsg = document.getElementById ("lastNameErrorMsg");
+/*checkInput (lastName, noNumbers, lastNameErrorMsg);*/
 
-const address = document.getElementById("address");
-const addressErrorMsg = document.getElementById ("addressErrorMsg");
-checkInput (address, noNumbers, addressErrorMsg);
+let address = document.getElementById("address");
+let addressErrorMsg = document.getElementById ("addressErrorMsg");
+/*checkInput (address, noNumbers, addressErrorMsg);*/
 
-const city = document.getElementById("city");
-const cityErrorMsg = document.getElementById ("cityErrorMsg");
-checkInput (city, noNumbers, cityErrorMsg);
+let city = document.getElementById("city");
+let cityErrorMsg = document.getElementById ("cityErrorMsg");
+/*checkInput (city, noNumbers, cityErrorMsg);*/
 
-const email = document.getElementById("email");
-const emailErrorMsg = document.getElementById ("emailErrorMsg");
-const emailReg =new RegExp ("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
-checkInput (email, emailReg, emailErrorMsg)
+let email = document.getElementById("email");
+let emailErrorMsg = document.getElementById ("emailErrorMsg");
+let emailReg =new RegExp ("^[^. ?!:;,/\\/_-]([._-]?[a-z0-9])+[^.?!: ;,/\\/_-][@][a-z0-9]+[.][a-z][a-z]+$");
+/*checkInput (email, emailReg, emailErrorMsg)*/
 
+let btnOrder = document.getElementById("order")
 
-function checkInput (element, regex, errorMsg)
-{
-if (RegExp.test (element.value)){
-    errorMsg.innerHTML ="Merci de mettre remplir le champ"
-}   
+// évènements en input pour mettre le message d'erreur si un mauvais caractère est utilisé Regex
+firstName.addEventListener('input',(e)=>{
+    e.preventDefault();
+    if (noNumbers.test(firstName.value)==false) {
+        firstNameErrorMsg.innerHTML = "Prénom est incorrect";
+    }else{
+        firstNameErrorMsg.innerHTML = "";
+    }
+});
+
+lastName.addEventListener('input',(e)=>{
+    e.preventDefault();
+    if (noNumbers.test(lastName.value)==false) {
+        lastNameErrorMsg.innerHTML = "Nom est incorrect";
+    }else{
+        lastNameErrorMsg.innerHTML = "";
+    }
+});
+
+address.addEventListener('input',(e)=>{
+    e.preventDefault();
+    if (noNumbers.test(address.value)==false) {
+        addressErrorMsg.innerHTML = "Addresse est incorrect";
+    }else{
+        addressErrorMsg.innerHTML = "";
+    }
+});
+
+city.addEventListener('input',(e)=>{
+    e.preventDefault();
+    if (noNumbers.test(city.value)==false) {
+        cityErrorMsg.innerHTML = "Ville incorrect";
+    }else{
+        cityErrorMsg.innerHTML = "";
+    }
+});
+
+email.addEventListener('input',(e)=>{
+    e.preventDefault();
+    if (emailReg.test(email.value)==false) {
+        emailErrorMsg.innerHTML = "Email incorrect";
+    }else{
+        emailErrorMsg.innerHTML = "";
+    }
+});
+
+// Récupération des valeurs du formulaires pour les mettres dans le localStorage
+
+btnOrder.addEventListener("click", (e) =>{
+    e.preventDefault()
+  
+    let formulaire = {
+    firstName : firstName.value,
+    lastName : lastName.value,
+    address : address.value,
+    city : city.value,
+    email : email.value,
+  }
+  // si tout es valide
+  if (firstName.value === "" || lastName.value === ""|| address.value === "" || city.value === "" || email.value === "")
+  {
+    alert =("champs manquant")
+    // sinon je créé un tableau et j'envoi les données     
+    } 
+    else {
+    let envoyer = {
+    panierComplet,
+    formulaire
+  }
+  console.log("envoyer")
+  console.log(envoyer)
 }
+})
