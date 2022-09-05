@@ -226,11 +226,6 @@ function calculTotalPrice(){
 }
 
 // le formulaire (en cours)
-/*document.getElementById("order").addEventListener ('click', function(e){
-    e.preventDefault();
-    console.log("Click");
-    checkInput()      
-  });*/
 
 let firstName = document.getElementById("firstName");
 let firstNameErrorMsg = document.getElementById ("firstNameErrorMsg");
@@ -302,7 +297,7 @@ email.addEventListener('input',(e)=>{
     }
 });
 
-// Récupération des valeurs du formulaires pour les mettres dans le localStorage
+// Récupération des valeurs du formulaire + PanierComplet
 
 btnOrder.addEventListener("click", (e) =>{
     e.preventDefault()
@@ -314,11 +309,13 @@ btnOrder.addEventListener("click", (e) =>{
     city : city.value,
     email : email.value,
   }
-  // si tout es valide
+  // si tout es n'est pas validé
+
   if (firstName.value === "" || lastName.value === ""|| address.value === "" || city.value === "" || email.value === "")
   {
-    alert =("champs manquant")
-    // sinon je créé un tableau et j'envoi les données     
+    alert =("Champs manquant")
+
+    // si validé on creer un tableau on envoi les données     
     } 
     else {
     let envoyer = {
@@ -329,3 +326,5 @@ btnOrder.addEventListener("click", (e) =>{
   console.log(envoyer)
 }
 })
+
+// mise en place du post/get 
