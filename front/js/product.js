@@ -128,14 +128,6 @@ function checkProduct() {
     //Initialisation du local storage
     let productLocalStorage = JSON.parse(localStorage.getItem("product"));
 
-    //Fenetre de confirmation
-    /*const popupConf =() =>{ 
-if (confirm(`Votre commande de ${quantity} ${name} ${color} est ajoutée au panier
-Pour consulter votre panier, cliquez sur OK`)){
-            window.location.href ="cart.html";
-
-  }   
-}*/
     //Si le panier comporte déjà au moins 1 article
     if (productLocalStorage) {
       const resultFind = productLocalStorage.find(

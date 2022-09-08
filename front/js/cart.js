@@ -126,13 +126,13 @@ function deleteProduct(event) {
   const resultIndex = productLocalStorage.findIndex(
     (e) => e.id === id && e.color === color
   );
-
-  console.log("resultIndex", resultIndex);
+  //ligne de l'index
+  //console.log("resultIndex", resultIndex);
 
   // On supprime
   productLocalStorage.splice(resultIndex, 1);
   // On vérifie que le LS est correct après supression
-  console.log("productLocalStorage + supression", productLocalStorage);
+  // console.log("productLocalStorage + supression", productLocalStorage);
   // On met à jour le LS du navigateur
   localStorage.setItem("product", JSON.stringify(productLocalStorage));
   // On demande à enlever l'article du DOM
@@ -160,30 +160,39 @@ function updateQuantity(event) {
   event.preventDefault();
 
   choiceQty = Number(event.target.value);
+  
   //console.log(event.target)
 
   // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
   let myArticle = event.target.closest(`article`);
+  
   //console.log(myArticle);
+  
   let colorMyArticle = myArticle.getAttribute("data-color");
+  
   //console.log(colorMyArticle);
+  
   let idMyArticle = myArticle.getAttribute("data-id");
+  
   //console.log(idMyArticle);
 
   // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
   const resultIndex = productLocalStorage.findIndex(
     (item) => item.id === idMyArticle && item.color === colorMyArticle
   );
+  
   //console.log("resultIndex", resultIndex);
 
-  // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier,...
-  //...on met à jour la quantité dans le localStorage et le DOM
+  // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier on met à jour la quantité dans le localStorage et le DOM
   if (choiceQty > 0 && choiceQty <= 100) {
     let LS = JSON.parse(localStorage.getItem("product"));
+    
     //console.log(LS[resultIndex])
+   
     LS[resultIndex].quantity = choiceQty;
 
     localStorage.setItem("product", JSON.stringify(LS));
+    
     // Maj du produit du panierComplet
     panierComplet[resultIndex].quantity = choiceQty;
     console.log(panierComplet);
@@ -196,20 +205,27 @@ function updateQuantity(event) {
 }
 
 function calculQuantite() {
+  
   //console.log("mon panier complet",panierComplet)
+  
   let qty = 0;
 
   for (let product of panierComplet) {
+   
     //console.log(product.quantity)
+    
     qty += product.quantity;
   }
 
   //console.log("total qty", qty)
+  
   document.getElementById("totalQuantity").innerHTML = qty;
 }
 
 function calculTotalPrice() {
+ 
   //console.log("mon panier complet",panierComplet)
+  
   let price = 0;
 
   for (let product of panierComplet) {
