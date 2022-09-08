@@ -5,10 +5,8 @@ let products = [];
 async function init() {
   // Attend le retour de user avant de buildHTML
   products = await getProducts();
-  console.log(products);
 
   if (products.length > 0) {
-    console.log(products);
     // deepcode ignore WrongNumberOfArguments: <please specify a reason of ignoring this>
     buildHTML(products);
   } else if (products.length <= 0) {

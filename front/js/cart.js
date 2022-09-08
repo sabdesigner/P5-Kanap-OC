@@ -104,7 +104,7 @@ function createProducts(productList) {
 //Evènements de suppression sur les boutons supprimer avec closest
 function eventDeleteProduct() {
   let selectsSupp = document.querySelectorAll(".deleteItem");
-  console.log("selectsSupp", selectsSupp);
+  //console.log("selectsSupp", selectsSupp);
   selectsSupp.forEach((select) => {
     select.addEventListener("click", (event) => {
       deleteProduct(event);
@@ -114,15 +114,12 @@ function eventDeleteProduct() {
 
 function deleteProduct(event) {
   event.preventDefault();
-  console.log(event.target);
+  //console.log(event.target);
   //on pointe le parent hiéarchique <article>`du lien à supp
   let myProduct = event.target.closest(`article`);
-  console.log("myProduct", myProduct);
   let id = myProduct.getAttribute("data-id");
   let color = myProduct.getAttribute("data-color");
-
   //console.log("LS", productLocalStorage)
-
   const resultIndex = productLocalStorage.findIndex(
     (e) => e.id === id && e.color === color
   );
@@ -148,7 +145,7 @@ function deleteProduct(event) {
 //Evènements sur les inputs quantité
 function eventupdateQuantity() {
   let changeQty = document.querySelectorAll(".itemQuantity");
-  console.log("changeQty", changeQty);
+  //console.log("changeQty", changeQty);
   changeQty.forEach((item) => {
     item.addEventListener("change", (event) => {
       updateQuantity(event);
@@ -160,29 +157,18 @@ function updateQuantity(event) {
   event.preventDefault();
 
   choiceQty = Number(event.target.value);
-  
-  //console.log(event.target)
-
-  // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
+    // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
   let myArticle = event.target.closest(`article`);
-  
-  //console.log(myArticle);
-  
+    
   let colorMyArticle = myArticle.getAttribute("data-color");
-  
-  //console.log(colorMyArticle);
-  
+    
   let idMyArticle = myArticle.getAttribute("data-id");
   
-  //console.log(idMyArticle);
-
   // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
   const resultIndex = productLocalStorage.findIndex(
     (item) => item.id === idMyArticle && item.color === colorMyArticle
   );
   
-  //console.log("resultIndex", resultIndex);
-
   // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier on met à jour la quantité dans le localStorage et le DOM
   if (choiceQty > 0 && choiceQty <= 100) {
     let LS = JSON.parse(localStorage.getItem("product"));
@@ -195,7 +181,7 @@ function updateQuantity(event) {
     
     // Maj du produit du panierComplet
     panierComplet[resultIndex].quantity = choiceQty;
-    console.log(panierComplet);
+    //console.log(panierComplet);
 
     // Et, on recalcule la quantité et le prix total du panier
     // On recalcule
@@ -210,22 +196,15 @@ function calculQuantite() {
   
   let qty = 0;
 
-  for (let product of panierComplet) {
-   
-    //console.log(product.quantity)
-    
+  for (let product of panierComplet) {    
     qty += product.quantity;
   }
-
-  //console.log("total qty", qty)
   
   document.getElementById("totalQuantity").innerHTML = qty;
 }
 
 function calculTotalPrice() {
- 
-  //console.log("mon panier complet",panierComplet)
-  
+   
   let price = 0;
 
   for (let product of panierComplet) {
@@ -318,7 +297,6 @@ email.addEventListener("input", (e) => {
 });
 
 // Récupération des valeurs du formulaire + PanierComplet
-
 btnOrder.addEventListener("click", (e) => {
   e.preventDefault();
 
@@ -351,9 +329,7 @@ btnOrder.addEventListener("click", (e) => {
       contact,
       products,
     };
-
     //console.log(products, contact)
-
     fetch("http://localhost:3000/api/products/order", {
       method: "POST",
       headers: {
