@@ -1,24 +1,22 @@
+// Variable pour stocker les Id de chaque article présent dans le panier (utilisés pour créer la commande)
 let products = [];
 
-// Fonction d'initialisation qui se lancera à chaque ouverture de la page (voir ligne 38)
+// Fonction d'initialisation qui se lancera à chaque ouverture de la page 
 // Asynchrone, pour aller chercher dans l'API + mot clef await
 async function init() {
   // Attend le retour de user avant de buildHTML
   products = await getProducts();
-
   if (products.length > 0) {
-    // deepcode ignore WrongNumberOfArguments: <please specify a reason of ignoring this>
     buildHTML(products);
   } else if (products.length <= 0) {
-    // document.createElement("div").innerHTML = "Désolé il n'y a plus de produits";
-  }
+   document.createElement("div");
+   document.innerHTML = "Désolé il n'y a plus de produits";}
 }
-
+// Création de la fonction getProduct et récupération des infos à afficher via l'api
 function getProducts() {
   return (
     fetch("http://localhost:3000/api/products")
       .then((res) => res.json())
-
       .then((products) => {
         return products;
       })
@@ -32,7 +30,7 @@ function getProducts() {
       })
   );
 }
-
+// Création du contenu  
 function buildHTML() {
   const items = document.getElementById("items");
 
@@ -60,5 +58,6 @@ function buildHTML() {
     article.appendChild(description);
   }
 }
-//Lancement du site, on fait tout
+
+//Lancement du site
 init();

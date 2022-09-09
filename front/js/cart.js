@@ -1,14 +1,12 @@
-let productListFiltred = [];
+// Création d'une var. qui appel la methode pour creer les éléments de la propriété de l'id correspondant à "cart__items"
 let elementQuantity = document.getElementById("cart__items");
-
+// Variable pour stocker l'ensemble des infos du panier
 let panierComplet = [];
-
-//  Cette fonction fait GetLocalStorage et retourne les données
+// Cette fonction fait GetLocalStorage et retourne les données
 function getCart() {
-  //Initialisation du local storage
+  // Initialisation du local storage
   let LocalStorage = JSON.parse(localStorage.getItem("product")) || [];
   console.table(LocalStorage);
-
   if (
     LocalStorage === null ||
     LocalStorage === 0 ||
@@ -18,7 +16,6 @@ function getCart() {
     let element = document.createElement("div");
     element.innerHTML = "Votre panier est vide";
     elementQuantity.appendChild(element);
-
     console.log("Panier vide");
     return LocalStorage;
   } else LocalStorage !== null || LocalStorage !== 0;
@@ -27,9 +24,7 @@ function getCart() {
     return LocalStorage;
   }
 }
-
 let productLocalStorage = getCart();
-
 // Récupération des infos à afficher via l'api
 fetch(`http://localhost:3000/api/products/`)
   .then(function (res) {
@@ -40,7 +35,6 @@ fetch(`http://localhost:3000/api/products/`)
   .then(function (produitsAPI) {
     console.log("produits du LS", productLocalStorage);
     // Tableau vide qui contiendra les données du LS (qty, color) et les données de l'api (id, name, price, color, imageUrl)
-
     // Pour chaque produit existant dans l'API
     produitsAPI.map((productAPI) => {
       // Et pour chaque produit existant dans le LS
@@ -59,20 +53,17 @@ fetch(`http://localhost:3000/api/products/`)
         }
       });
     });
-
     // le panierComplet est rempli
     console.log("panierComplet", panierComplet);
-
     // Créer les bloc HTML
     createProducts(panierComplet);
     // Ajoute les events de delete et de changement de quantité
-
     calculQuantite();
     calculTotalPrice();
     eventDeleteProduct();
     eventupdateQuantity();
   });
-
+// Fonction de creation des éléments
 function createProducts(productList) {
   // Si le panier est vide
   for (let product of productList) {
@@ -100,7 +91,6 @@ function createProducts(productList) {
                 </article>`;
   }
 }
-
 //Evènements de suppression sur les boutons supprimer avec closest
 function eventDeleteProduct() {
   let selectsSupp = document.querySelectorAll(".deleteItem");
@@ -111,7 +101,7 @@ function eventDeleteProduct() {
     });
   });
 }
-
+// Fonction de suppression 
 function deleteProduct(event) {
   event.preventDefault();
   //console.log(event.target);
@@ -125,7 +115,6 @@ function deleteProduct(event) {
   );
   //ligne de l'index
   //console.log("resultIndex", resultIndex);
-
   // On supprime
   productLocalStorage.splice(resultIndex, 1);
   // On vérifie que le LS est correct après supression
@@ -136,12 +125,10 @@ function deleteProduct(event) {
   myProduct.parentNode.removeChild(myProduct);
   // On supprime le produit du panierComplet
   panierComplet.splice(resultIndex, 1);
-
   // On recalcule
   calculQuantite();
   calculTotalPrice();
 }
-
 //Evènements sur les inputs quantité
 function eventupdateQuantity() {
   let changeQty = document.querySelectorAll(".itemQuantity");
@@ -152,37 +139,27 @@ function eventupdateQuantity() {
     });
   });
 }
-
+// Fonction sur les quantités
 function updateQuantity(event) {
   event.preventDefault();
-
   choiceQty = Number(event.target.value);
     // On pointe le parent hiérarchique <article> de l'input "itemQuantity"
   let myArticle = event.target.closest(`article`);
-    
   let colorMyArticle = myArticle.getAttribute("data-color");
-    
   let idMyArticle = myArticle.getAttribute("data-id");
-  
   // On récupère dans le localStorage l'élément (même id et même couleur) dont on veut modifier la quantité
   const resultIndex = productLocalStorage.findIndex(
     (item) => item.id === idMyArticle && item.color === colorMyArticle
-  );
-  
+  ); 
   // Si la quantité est comprise entre 1 et 100 et que c'est un nombre entier on met à jour la quantité dans le localStorage et le DOM
   if (choiceQty > 0 && choiceQty <= 100) {
-    let LS = JSON.parse(localStorage.getItem("product"));
-    
+    let LS = JSON.parse(localStorage.getItem("product")); 
     //console.log(LS[resultIndex])
-   
     LS[resultIndex].quantity = choiceQty;
-
     localStorage.setItem("product", JSON.stringify(LS));
-    
     // Maj du produit du panierComplet
     panierComplet[resultIndex].quantity = choiceQty;
     //console.log(panierComplet);
-
     // Et, on recalcule la quantité et le prix total du panier
     // On recalcule
     calculQuantite();
