@@ -294,9 +294,19 @@ btnOrder.addEventListener("click", (e) => {
     email.value === ""
   ) {
     alert("Veuillez remplir le formulaire contact");
+  } 
+    else if (
+    panierComplet === null ||
+    panierComplet === 0 ||
+    panierComplet === [] ||
+    panierComplet.length === 0
+  ) 
+  {
+    alert("Votre panier est vide");
+  }
 
-    // si validé on creer un tableau on envoi les données
-  } else {
+// si validé on creer un tableau on envoi les données
+  else {
     let products = [];
     for (let product of panierComplet) {
       products.push(product.id);
@@ -320,6 +330,7 @@ btnOrder.addEventListener("click", (e) => {
       })
       .then((data) => {
         window.location.href = `confirmation.html?orderId=${data.orderId}`;
+       localStorage.clear();
       });
   }
 });
